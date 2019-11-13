@@ -15,11 +15,15 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+INCLUDEPATH += C:\boost_1_71_0\
+
 SOURCES += \
+    asioclient.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
+    asioclient.h \
     widget.h
 
 FORMS += \
@@ -29,3 +33,10 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../boost_1_71_0/stage/lib/ -lboost_system-vc141-mt-x64-1_71
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../boost_1_71_0/stage/lib/ -lboost_system-vc141-mt-x64-1_71d
+else:unix: LIBS += -L$$PWD/../../boost_1_71_0/stage/lib/ -lboost_system-vc141-mt-x64-1_71
+
+INCLUDEPATH += $$PWD/../../boost_1_71_0/stage
+DEPENDPATH += $$PWD/../../boost_1_71_0/stage
