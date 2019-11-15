@@ -18,6 +18,9 @@ public:
     void Get(const QString& url, const QString& path);
     void handle_resolve(const boost::system::error_code& err,
                         boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
+    void handle_connect(const boost::system::error_code& err,
+                        boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
+    void handle_write(const boost::system::error_code& err);
 
 private:
     boost::asio::io_service ioservice;
@@ -26,6 +29,10 @@ private:
 
     std::string server, path;
     boost::asio::ip::tcp::resolver resolver;
+
+    boost::asio::ip::tcp::socket socket;
+
+    boost::asio::streambuf requestbuf;
 };
 
 #endif // ASIOCLIENT_H
