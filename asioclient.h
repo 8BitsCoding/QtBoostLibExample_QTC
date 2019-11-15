@@ -22,6 +22,8 @@ public:
                         boost::asio::ip::tcp::resolver::iterator endpoint_iterator);
     void handle_write(const boost::system::error_code& err);
     void handle_read_line(const boost::system::error_code& err);
+    void handle_read_header(const boost::system::error_code& err);
+    void handle_read_content(const boost::system::error_code& err);
 
 private:
     boost::asio::io_service ioservice;
@@ -35,6 +37,8 @@ private:
 
     boost::asio::streambuf requestbuf;
     boost::asio::streambuf responsebuf;
+
+    std::ostringstream oss;
 };
 
 #endif // ASIOCLIENT_H
