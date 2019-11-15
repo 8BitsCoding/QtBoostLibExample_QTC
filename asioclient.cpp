@@ -26,7 +26,8 @@ void AsioClient::Get(const QString& url, const QString& p)
 
     boost::asio::ip::tcp::resolver::query query(server, "http");
     resolver.async_resolve(query, boost::bind(&AsioClient::handle_resolve,
-                                              this, boost::asio::placeholders::error,
+                                              this,
+                                              boost::asio::placeholders::error,
                                               boost::asio::placeholders::iterator));
 
     // 2. connect
@@ -43,11 +44,16 @@ void AsioClient::handle_resolve(const boost::system::error_code& err, boost::asi
         boost::asio::ip::tcp::endpoint ep = *endpoint_iterator;
         qDebug() << ep.address().to_string().c_str();
 
-        socket.async_connect(*endpoint_iterator, boost::bind(&AsioClient::handle_connect, this, boost::asio::placeholders::error, endpoint_iterator));
+        socket.async_connect(*endpoint_iterator,
+                             boost::bind(&AsioClient::handle_connect,
+                                         this,
+                                         boost::asio::placeholders::error,
+                                         endpoint_iterator));
     }
 }
 
-void AsioClient::handle_connect(const boost::system::error_code& err,boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
+void AsioClient::handle_connect(const boost::system::error_code& err,
+                                boost::asio::ip::tcp::resolver::iterator endpoint_iterator)
 {
     if(!err) {
         // success
@@ -60,7 +66,9 @@ void AsioClient::handle_connect(const boost::system::error_code& err,boost::asio
         os << "Connection: close\r\n\r\n";
 
         boost::asio::async_write(socket, requestbuf,
-                                 boost::bind(&AsioClient::handle_write, this, boost::asio::placeholders::error));
+                                 boost::bind(&AsioClient::handle_write,
+                                             this,
+                                             boost::asio::placeholders::error));
     } else {
         qDebug() << err.message().c_str() << endl;
     }
@@ -71,7 +79,9 @@ void AsioClient::handle_write(const boost::system::error_code& err)
     // recv
     if(!err) {
         boost::asio::async_read_until(socket, responsebuf, "\r\n",
-                                      boost::bind(&AsioClient::handle_read_line, this, boost::asio::placeholders::error));
+                                      boost::bind(&AsioClient::handle_read_line,
+                                                  this,
+                                                  boost::asio::placeholders::error));
     } else {
         qDebug() << "handle_Write error : " << err.message().c_str() << endl;
     }
