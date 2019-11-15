@@ -125,7 +125,8 @@ void AsioClient::handle_read_header(const boost::system::error_code& err)
     std::string header;
     while(std::getline(istrm, header) && header != "\r") {
         // header
-        oss << header << std::endl;
+        //oss << header << std::endl;
+        // 본문 내용만 받는다.
     }
 
     boost::asio::streambuf::const_buffers_type bufs = responsebuf.data();
@@ -155,7 +156,11 @@ void AsioClient::handle_read_content(const boost::system::error_code& err)
     } else if(err == boost::asio::error::eof) {
         // file end
         qDebug() << oss.str().c_str() << endl;
+
+        emit read_finish(QString::fromStdString(oss.str()));
     } else {
         // error
+        emit read_failed(QString::fromStdString(err.message()));
     }
 }
+
